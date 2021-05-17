@@ -21,4 +21,4 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Minic
     chmod -R ugo+rw /opt/conda/  && \
     pip config set global.index-url  https://pypi.mirrors.ustc.edu.cn/simple/ && \
     pip install  opencv-contrib-python && \
-    pip cache purge 
+    conda clean -ya 
