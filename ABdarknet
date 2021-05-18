@@ -1,4 +1,5 @@
 FROM  nvidia/cuda:11.1.1-cudnn8-runtime-ubuntu18.04
+LABEL maintainer="zhangj"
 
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     apt-get update && apt-get install -y --no-install-recommends \
@@ -21,5 +22,5 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Minic
     conda install -y python=${PYTHON_VERSION} conda-build && \
     chmod -R ugo+rw /opt/conda/  && \
     pip config set global.index-url  https://pypi.mirrors.ustc.edu.cn/simple/ && \
-    pip install  opencv-contrib-python && \
+    pip install --no-cache-dir opencv-contrib-python && \
     conda clean -ya 
