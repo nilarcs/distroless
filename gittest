@@ -13,7 +13,7 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
         libsm6 \
         libxext6 \
         ninja-build \
-        libglib2.0-0 \
+        libglib2.0-0  && \
     rm -rf /var/lib/apt/lists/*
 
 # Install MMDetection
