@@ -3,8 +3,6 @@ FROM ubuntu:18.04
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
-        libjpeg-dev \
-        libpng-dev \
         curl \
         git \
         vim \
@@ -16,7 +14,6 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
         libxext6 \
         ninja-build \
         libglib2.0-0 \
-        libxrender-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Install MMDetection
