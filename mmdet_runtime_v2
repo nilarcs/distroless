@@ -3,6 +3,8 @@ FROM nvidia/cuda:11.1.1-runtime-ubuntu18.04
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
+        gcc \
+        g++ \
         curl \
         git \
         vim \
