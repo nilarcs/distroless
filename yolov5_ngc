@@ -1,0 +1,50 @@
+FROM nvcr.io/nvidia/pytorch:20.12-py3
+# https://ngc.nvidia.com/catalog/containers/nvidia:pytorch
+# https://github.com/pytorch/pytorch/commit/52ea372
+# Release 20.12 is based on CUDA 11.1.1, which requires NVIDIA driver release 455.23.
+# However, if you are running on Tesla (for example, T4 or any other Tesla board), you may use NVIDIA driver release 418.xx, 440.30, or 450.51.
+# Ubuntu 20.04
+# CUDA 11.1.1
+# cuDNN 8.0.5
+# Python 3.8
+# PyTorch 1.8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        vim \
+        tar \
+        zip \
+        unzip \
+        htop \
+        screen \
+        libgl1-mesa-glx && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src
+ARG YOLO=5.0
+RUN git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
+    pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof && \
+    pip install coremltools onnx gsutil notebook  && \
+    pip install -r requirements.txt
+#bash weights/download_weights.sh
+
+RUN echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch && \
+    conda config --set show_channel_urls yes && \
+    conda clean -ya
+#conda create -n myenv numpy
+
+# entrypoint
+#WORKDIR /workspace
+#COPY entrypoint.sh /usr/src/
+#ENTRYPOINT ["/bin/bash", "/usr/src/entrypoint.sh"]
+# Build and run
+# n=test
+# t=5.0-torch1.8-cuda11.2-ngc
+# docker build -t build:${t} -f ${t} --build-arg PYTHON_VERSION=3.8 .
+# docker run --gpus device=0 -d -p 7000:9000 --ipc=host --name ${n} -v "$(pwd)"/${n}:/workspace build:${t} [dev|ssh|app]
+# Updated: 2021-04-16
