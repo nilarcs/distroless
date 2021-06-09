@@ -1,0 +1,31 @@
+FROM  ubuntu:18.04
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        vim \
+        tar \
+        zip \
+        unzip \
+        tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG PYTHON_VERSION=3.8
+ENV PATH=/opt/conda/bin:$PATH
+RUN curl -fsSL -v -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    conda install -y python=${PYTHON_VERSION} conda-build && \
+    pip install --no-cache-dir notebook && \
+    chmod -R ugo+rw /opt/conda/
+
+RUN echo "export PATH=/opt/conda/bin:$PATH" >> ~/.bashrc && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main && \
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch && \
+    conda config --set show_channel_urls yes && \
+    conda clean -ya && \
+    jupyter-notebook --generate-config && \
+    echo -e "c.NotebookApp.ip = \"0.0.0.0 \" \n c.NotebookApp.open_browser = False \n c.NotebookApp.port = 8888  \n  c.NotebookApp.token = '' " > /root/.jupyter/jupyter_notebook_config.py
