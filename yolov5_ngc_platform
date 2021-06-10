@@ -23,8 +23,8 @@ WORKDIR /usr/src
 ARG YOLO=5.0
 RUN git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
     pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof && \
-    pip install coremltools onnx gsutil notebook  && \
-    pip install -r requirements.txt
+    pip install --no-cache-dir coremltools onnx gsutil notebook  && \
+    pip install --no-cache-dir -r requirements.txt
 
 
 RUN echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
@@ -34,5 +34,5 @@ RUN echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
     conda config --set show_channel_urls yes && \
     conda clean -ya  && \
     jupyter-notebook --generate-config && \
-    echo -e "c.NotebookApp.ip = \"0.0.0.0 \" \n c.NotebookApp.open_browser = False \n c.NotebookApp.port = 8888  \n  c.NotebookApp.token = '' " > /root/.jupyter/jupyter_notebook_config.py
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " > /root/.jupyter/jupyter_notebook_config.py
 
