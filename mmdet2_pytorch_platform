@@ -23,4 +23,4 @@ RUN git clone  https://github.com/open-mmlab/mmdetection.git mmdetection && cd m
     pip install --no-cache-dir -r requirements/build.txt  -i https://pypi.mirrors.ustc.edu.cn/simple/   && \
     pip install --no-cache-dir -e . && \
     jupyter-notebook --generate-config && \
-    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " > /root/.jupyter/jupyter_notebook_config.py
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " >> /root/.jupyter/jupyter_notebook_config.py
