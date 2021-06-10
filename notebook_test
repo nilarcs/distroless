@@ -28,4 +28,4 @@ RUN echo "export PATH=/opt/conda/bin:$PATH" >> ~/.bashrc && \
     conda config --set show_channel_urls yes && \
     conda clean -ya && \
     jupyter-notebook --generate-config && \
-    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " > /root/.jupyter/jupyter_notebook_config.py
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " >> /root/.jupyter/jupyter_notebook_config.py
