@@ -1,5 +1,6 @@
 #FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
-FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
+#FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
+FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
 
 ENV FORCE_CUDA="1"
 ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6"
