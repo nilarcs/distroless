@@ -1,0 +1,31 @@
+#FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime
+#FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
+FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+
+ENV FORCE_CUDA="1"
+ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6"
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+ENV CMAKE_PREFIX_PATH="$(dirname $(which conda))/../"
+
+RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6  vim tar zip unzip curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir notebook
+
+# Install MMCV  
+# install mmcv-full from wheel , cause 'nms is not compiled with GPU support' 
+WORKDIR /usr/src
+ARG MMCV=1.3.1
+RUN git clone https://github.com/open-mmlab/mmcv.git mmcv && cd mmcv && \
+    git checkout -B main v${MMCV} && \
+    MMCV_WITH_OPS=1 pip install -e .
+
+# Install MMDetection
+#WORKDIR /usr/src
+#ARG MMDET=2.11.0
+#RUN git clone  https://github.com/open-mmlab/mmdetection.git mmdetection && cd mmdetection && \
+ #   git checkout -B main v${MMDET} && \
+#    pip install --no-cache-dir -r requirements/build.txt  -i https://pypi.mirrors.ustc.edu.cn/simple/   && \
+#    pip install --no-cache-dir -e . && \
+#    jupyter-notebook --generate-config && \
+#   echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " >> /root/.jupyter/jupyter_notebook_config.py
