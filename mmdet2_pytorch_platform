@@ -2,10 +2,11 @@
 #FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
 FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
 
-ENV FORCE_CUDA="1"
-ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6"
-ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
-ENV CMAKE_PREFIX_PATH="$(dirname $(which conda))/../"
+#ENV FORCE_CUDA="1"
+# cuda10 最多到7.5，针对新处的卡比如测试的安培卡才需要加到8以上。以后等卡普及了自然会支持，不必要加。
+#ENV TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6"
+#ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+#ENV CMAKE_PREFIX_PATH="$(dirname $(which conda))/../"
 
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6  vim tar zip unzip curl \
     && apt-get clean \
