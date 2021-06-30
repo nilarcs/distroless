@@ -1,0 +1,35 @@
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        vim \
+        tar \
+        zip \
+        unzip  && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG PYTHON_VERSION=3.8
+ENV PATH=/opt/conda/bin:$PATH
+RUN curl -fsSL -v -o ~/miniconda.sh  https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    conda install -y python=${PYTHON_VERSION} conda-build && \
+    chmod -R ugo+rw /opt/conda/ && \
+    #install notebook
+    pip install --no-cache-dir notebook  -i http://mirrors.aliyun.com/pypi/simple/ && \  
+    #install paddlepaddle2.1 (cuda10.2 )
+    pip install --no-cache-dir paddlepaddle-gpu  -i http://mirrors.aliyun.com/pypi/simple/ && \
+    #install paddledetection 2.1
+WORKDIR /usr/src
+RUN git clone  https://github.com/PaddlePaddle/PaddleDetection.git PaddleDetection && cd PaddleDetection && \
+    python setup.py install && \
+    pip install --no-cache-dir -r requirements.txt  -i http://mirrors.aliyun.com/pypi/simple/  && \
+    #clean conda
+    conda clean -ya && \
+    echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
+    jupyter-notebook --generate-config && \
+    echo -e "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = ''" >> /root/.jupyter/jupyter_notebook_config.py
