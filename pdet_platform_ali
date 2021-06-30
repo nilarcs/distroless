@@ -20,14 +20,14 @@ RUN curl -fsSL -v -o ~/miniconda.sh  https://mirrors.tuna.tsinghua.edu.cn/anacon
     conda install -y python=${PYTHON_VERSION} conda-build && \
     chmod -R ugo+rw /opt/conda/ && \
     #install notebook
-    pip install --no-cache-dir notebook  -i http://mirrors.aliyun.com/pypi/simple/ && \  
+    pip install --no-cache-dir notebook  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com && \  
     #install paddlepaddle2.1 (cuda10.2 )
-    pip install --no-cache-dir paddlepaddle-gpu  -i http://mirrors.aliyun.com/pypi/simple/ && \
+    pip install --no-cache-dir paddlepaddle-gpu  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com && \
     #install paddledetection 2.1
 WORKDIR /usr/src
 RUN git clone  https://github.com/PaddlePaddle/PaddleDetection.git PaddleDetection && cd PaddleDetection && \
     python setup.py install && \
-    pip install --no-cache-dir -r requirements.txt  -i http://mirrors.aliyun.com/pypi/simple/  && \
+    pip install --no-cache-dir -r requirements.txt  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com && \
     #clean conda
     conda clean -ya && \
     echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
