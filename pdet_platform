@@ -19,10 +19,9 @@ RUN curl -fsSL -v -o ~/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anacond
     rm ~/miniconda.sh && \
     conda install -y python=${PYTHON_VERSION} conda-build && \
     chmod -R ugo+rw /opt/conda/ && \
-    #install notebook
-    pip install --no-cache-dir notebook  && \  
-    #install paddlepaddle2.1 (cuda10.2 )
-    pip install --no-cache-dir paddlepaddle-gpu  && \
+    #install notebook  paddlepaddle2.1 (cuda10.2 )
+    pip install --no-cache-dir notebook  paddlepaddle-gpu  
+
     #install paddledetection 2.1
 WORKDIR /usr/src
 RUN git clone  https://github.com/PaddlePaddle/PaddleDetection.git PaddleDetection && cd PaddleDetection && \
