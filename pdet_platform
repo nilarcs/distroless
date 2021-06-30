@@ -22,12 +22,12 @@ RUN curl -fsSL -v -o ~/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anacond
     #install notebook
     pip install --no-cache-dir notebook  && \  
     #install paddlepaddle2.1 (cuda10.2 )
-    pip install --no-cache-dir paddlepaddle-gpu -i https://mirror.baidu.com/pypi/simple && \
+    pip install --no-cache-dir paddlepaddle-gpu  && \
     #install paddledetection 2.1
 WORKDIR /usr/src
 RUN git clone  https://github.com/PaddlePaddle/PaddleDetection.git PaddleDetection && cd PaddleDetection && \
     python setup.py install && \
-    pip install --no-cache-dir -r requirements.txt -i https://mirror.baidu.com/pypi/simple  && \
+    pip install --no-cache-dir -r requirements.txt  && \
     #clean conda
     conda clean -ya && \
     echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
