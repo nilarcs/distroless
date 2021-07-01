@@ -20,7 +20,7 @@ RUN curl -fsSL -v -o ~/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anacond
     conda install -y python=${PYTHON_VERSION} conda-build && \
     chmod -R ugo+rw /opt/conda/ && \
     #install notebook  paddlepaddle2.1 (cuda10.2 )
-    pip install --no-cache-dir notebook  paddlepaddle-gpu pytest 
+    pip install --no-cache-dir notebook  paddlepaddle-gpu pytest flake8 
 
     #install paddledetection 2.1
 WORKDIR /usr/src
