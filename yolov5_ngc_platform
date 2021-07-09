@@ -1,4 +1,5 @@
-FROM nvcr.io/nvidia/pytorch:20.03-py3
+#FROM nvcr.io/nvidia/pytorch:20.03-py3
+FROM nvcr.io/nvidia/pytorch:20.11-py3
 # https://ngc.nvidia.com/catalog/containers/nvidia:pytorch
 # https://github.com/pytorch/pytorch/commit/52ea372
 # Release 20.12 is based on CUDA 11.1.1, which requires NVIDIA driver release 455.23.
