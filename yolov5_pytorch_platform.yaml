@@ -1,0 +1,19 @@
+From pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        vim \
+        tar \
+        zip \
+        unzip \
+        libgl1-mesa-glx && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src
+ARG YOLO=5.0
+RUN git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
+    pip install --no-cache-dir coremltools onnx gsutil notebook  && \
+    pip install --no-cache-dir -r requirements.txt && \
+    jupyter-notebook --generate-config && \
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " >> /root/.jupyter/jupyter_notebook_config.py
