@@ -30,7 +30,7 @@ RUN mkdir -p /run/sshd &&  \
     git clone  https://github.com/open-mmlab/mmdetection.git mmdetection && cd mmdetection && \
     git checkout -B main v${MMDET} && \
     pip install --no-cache-dir -r requirements/build.txt  -i https://pypi.mirrors.ustc.edu.cn/simple/   && \
-    pip install --no-cache-dir -e . && \
+    pip install --no-cache-dir -e . 
 
 EXPOSE 22
 
