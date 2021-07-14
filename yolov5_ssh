@@ -1,0 +1,25 @@
+FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+
+RUN apt-get update && apt-get install -y --no-install-recommends  \
+	libglib2.0-0  \
+	libgl1-mesa-glx  \
+	vim \
+	tar  \
+	zip  \
+	unzip \
+	curl  \
+	git \
+	ca-certificates  \
+	openssh-server  && \
+    apt-get clean \
+    && rm -rf /var/lib/apt/lists/* 
+
+WORKDIR /usr/src
+ARG YOLO=5.0
+RUN git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
+    pip install --no-cache-dir coremltools onnx gsutil   && \
+    pip install --no-cache-dir -r requirements.txt && \
+
+EXPOSE 22
+
+CMD    ["/usr/sbin/sshd", "-D"]
