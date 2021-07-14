@@ -16,7 +16,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 WORKDIR /usr/src
 ARG YOLO=5.0
-RUN git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
+RUN mkdir -p /run/sshd &&  \
+	sed -i 's/^#\(PermitRootLogin\) .*/\1 yes/' /etc/ssh/sshd_config && \
+    sed -i 's/^\(UsePAM yes\)/# \1/' /etc/ssh/sshd_config && \
+    echo "root:123456" | chpasswd  && \
+	git clone -b v${YOLO} --depth 1 https://github.com/ultralytics/yolov5.git yolov5 && cd yolov5 && \
     pip install --no-cache-dir coremltools onnx gsutil   && \
     pip install --no-cache-dir -r requirements.txt 
     
