@@ -22,5 +22,6 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Minic
     chmod -R ugo+rw /opt/conda/
 
 WORKDIR /usr/src
-RUN git clone --recurse-submodules https://github.com/davidhalter/jedi  && cd jedi  && \
-          python setup.py install
+RUN  git clone --recurse-submodules http://github.com/davidhalter/jedi-vim &&
+           git clone --recurse-submodules https://github.com/davidhalter/jedi  && cd jedi  && \
+           python setup.py install
