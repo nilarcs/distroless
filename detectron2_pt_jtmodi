@@ -1,0 +1,39 @@
+FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+
+RUN apt-get update && apt-get install -y --no-install-recommends  \
+	libglib2.0-0  \
+	libgl1-mesa-glx  \
+	vim \
+	tar  \
+	zip  \
+	unzip \
+	curl  \
+	git \
+	ca-certificates  \
+	gcc \
+	g++ \
+	ninja-build \
+	openssh-server  && \
+    apt-get clean  && \
+    rm -rf /var/lib/apt/lists/*  &&  \
+    pip install --no-cache-dir notebook opencv-contrib-python jupyter_contrib_nbextensions  jupyter_nbextensions_configurator  jupyterthemes
+
+# Install Detectron2 from source
+WORKDIR /usr/src
+
+RUN git clone https://github.com/facebookresearch/detectron2.git && \
+    python -m pip install -e detectron2 && \ 
+    mkdir -p /run/sshd &&  \
+	sed -i 's/^#\(PermitRootLogin\) .*/\1 yes/' /etc/ssh/sshd_config && \
+    sed -i 's/^\(UsePAM yes\)/# \1/' /etc/ssh/sshd_config && \
+    echo "root:123456" | chpasswd  && \
+    jupyter-notebook --generate-config && \
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = '' " >> /root/.jupyter/jupyter_notebook_config.py  && \
+    jupyter contrib nbextension install  && \
+    jupyter nbextensions_configurator enable && \
+    jt -t oceans16
+
+EXPOSE 22
+
+# override by platform, but can run sshd in docker env
+CMD    ["/usr/sbin/sshd", "-D"]
