@@ -1,0 +1,44 @@
+FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        vim \
+        tar \
+        zip \
+	libjpeg-dev \
+	libpng-dev \
+	libgl1-mesa-glx \
+	libglib2.0-0 \
+	openssh-server \
+        unzip  && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG PYTHON_VERSION=3.8
+ENV PATH=/opt/conda/bin:$PATH
+RUN curl -fsSL -v -o ~/miniconda.sh  https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    conda install -y python=${PYTHON_VERSION} conda-build && \
+    chmod -R ugo+rw /opt/conda/ && \
+    #install notebook
+    pip install --no-cache-dir notebook paddlepaddle-gpu pytest flake8  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com   
+    
+    #install paddleocr 2.1
+WORKDIR /usr/src
+RUN mkdir -p /run/sshd &&  \
+	sed -i 's/^#\(PermitRootLogin\) .*/\1 yes/' /etc/ssh/sshd_config && \
+    sed -i 's/^\(UsePAM yes\)/# \1/' /etc/ssh/sshd_config && \
+    echo "root:123456" | chpasswd  && \
+	git clone https://gitee.com/paddlepaddle/PaddleOCR  PaddleOCR && cd PaddleOCR && \
+    pip install --no-cache-dir -r requirements.txt  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com && \
+    #clean conda
+    conda clean -ya && \
+    echo "export PATH=/opt/conda/bin:$PATH" >> /etc/profile && \
+    jupyter-notebook --generate-config && \
+    echo "c.NotebookApp.ip = \"0.0.0.0\" \nc.NotebookApp.open_browser = False \nc.NotebookApp.port = 8888  \nc.NotebookApp.token = ''" >> /root/.jupyter/jupyter_notebook_config.py
+
+EXPOSE 22
