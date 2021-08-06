@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 	openssh-server  && \
     apt-get clean  && \
     rm -rf /var/lib/apt/lists/*  &&  \
-    pip install --no-cache-dir notebook opencv-contrib-python
+    pip install --no-cache-dir notebook opencv-contrib-python shapely
 
 # Install Detectron2 from source
 WORKDIR /usr/src
