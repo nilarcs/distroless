@@ -26,10 +26,12 @@ RUN curl -fsSL -v -o ~/miniconda.sh  https://mirrors.tuna.tsinghua.edu.cn/anacon
     rm ~/miniconda.sh && \
     conda install -y python=${PYTHON_VERSION} conda-build && \
     chmod -R ugo+rw /opt/conda/ && \
+    #install paddlepaddle dev for fix memory leak
+    pip install --no-cache-dir paddlepaddle-gpu==0.0.0.post102 -f https://www.paddlepaddle.org.cn/whl/linux/gpu/develop.html && \
     #install notebook
-    pip install --no-cache-dir notebook paddlepaddle-gpu pytest flake8  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com   
+    pip install --no-cache-dir notebook pytest flake8  -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com   
     
-    #install paddleocr 2.1
+    #install paddleocr 2.2
 WORKDIR /usr/src
 RUN mkdir -p /run/sshd &&  \
 	sed -i 's/^#\(PermitRootLogin\) .*/\1 yes/' /etc/ssh/sshd_config && \
