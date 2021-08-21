@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 WORKDIR /usr/src
 RUN git clone https://gitee.com/zhangming8/YOLOX.git &&  cd YOLOX && \
-    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir  -i http://mirrors.aliyun.com/pypi/simple/ -r requirements.txt && \
 	pip install -v -e . && \
 	#Install pycocotools.
-	pip install --no-cache-dir cython  && \
+	pip install --no-cache-dir  -i http://mirrors.aliyun.com/pypi/simple/ cython  && \
 	pip install 'git+https://gitee.com/YuchaoZheng/cocoapi.git#subdirectory=PythonAPI'
