@@ -1,0 +1,22 @@
+FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-devel
+
+RUN apt-get update && apt-get install -y --no-install-recommends  \
+	libglib2.0-0  \
+	libgl1-mesa-glx  \
+	vim \
+	tar  \
+	zip  \
+	unzip \
+	curl  \
+	git \
+	ca-certificates && \
+    apt-get clean \
+    && rm -rf /var/lib/apt/lists/* 
+
+WORKDIR /usr/src
+RUN git clone https://gitee.com/zhangming8/YOLOX.git &&  cd YOLOX && \
+    pip install --no-cache-dir -r requirements.txt && \
+	pip install -v -e . && \
+	#Install pycocotools.
+	pip install --no-cache-dir cython  && \
+	pip install 'git+https://gitee.com/YuchaoZheng/cocoapi.git#subdirectory=PythonAPI'
