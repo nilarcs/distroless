@@ -1,0 +1,22 @@
+FROM openjdk:17
+
+WORKDIR /opt
+
+#debian  https://github.com/nodesource/distributions/blob/master/README.md#debinstall
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  && apt-get install -y nodejs
+
+RUN curl https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz | tar xvz -C /opt/ --exclude="*.cmd" --exclude="docs" --exclude="example" --exclude="licenses" \
+    && ln -s /opt/apache-maven-3.8.5/bin/mvn /bin/mvn 
+
+#start spring io depends on spring initializr
+RUN  git clone https://github.com/spring-io/start.spring.io.git /opt/site 
+
+RUN cd /opt/site && mvn -B install -Dmaven.test.skip=true \
+    && cd /opt/site/start-site  && mvn -B package -Dmaven.test.skip=true \
+    && mv target/start-site.jar /opt/app.jar \
+    && cd /opt && rm -rf ~/.m2/ /opt/site/ /bin/mvn /opt/apache-maven* 
+
+RUN apt-get  autoclean -y \
+    &&  rm -rf /tmp/* && rm -rf /usr/share/doc/ && rm -rf /usr/share/man
+
+CMD ["/etc/alternatives/java_sdk_11/bin/java","-jar","/opt/app.jar"]
